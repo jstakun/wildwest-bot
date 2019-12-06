@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
         <dataFormats>
-            <json id="transform-score" library="Jackson" unmarshalTypeName="com.openshift.wildwest.models.Score"/>
+            <json id="transform-game" library="Jackson" unmarshalTypeName="com.openshift.wildwest.models.Game"/>
             <json id="transform-platform-object" library="Jackson" unmarshalTypeName="com.openshift.wildwest.models.PlatformObject"/>
         </dataFormats>
         <route id="simple-route">
@@ -12,8 +12,8 @@
        			<simple>${header.gameID} == null</simple>
        			<log id="init-game-log" message="Starting new game"/>
        			<toD uri="http4:{{backend.service}}/createGame"/>
-       			<unmarshal ref="transform-score"/>
-       			<setHeader headerName="gameID"><simple>${body.gameID}</simple></setHeader>
+       			<unmarshal ref="transform-game"/>
+       			<setHeader headerName="gameID"><simple>${body.score.gameID}</simple></setHeader>
        			<log message="New game started ${header.gameID}"/>
        			<removeHeaders pattern="CamelHttp*"/>
    			</filter>
