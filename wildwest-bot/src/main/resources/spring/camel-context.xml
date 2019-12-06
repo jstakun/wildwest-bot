@@ -18,6 +18,7 @@
        			<removeHeaders pattern="CamelHttp*"/>
    			</filter>
             <log id="route-log" message="getRandomObject ${property.TIMER_COUNTER}"/>
+            <setBody><simple>${header.gameID}</simple></setBody>
             <toD uri="http4:{{backend.service}}/getRandomObject"/>
             <unmarshal ref="transform-platform-object"/>
        		<setHeader headerName="objectType"><simple>${body.objectType}</simple></setHeader>
@@ -25,6 +26,7 @@
        		<setHeader headerName="objectName"><simple>${body.objectName}</simple></setHeader>
        		<removeHeaders pattern="CamelHttp*"/>
        		<log message="deleteObject ${body.objectName}"/>
+       		<setBody><simple>${header.gameID}</simple></setBody>
        		<toD uri="http4:{{backend.service}}/ws/deleteObject?gameID=${header.gameID}&amp;objectType=${body.objectType}&amp;objectName=${body.objectName}&amp;objectID=${body.objectID}"/>
             <log message="done"/> 
         </route>
