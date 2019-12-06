@@ -8,27 +8,39 @@
         </dataFormats>
         <route id="simple-route">
             <from id="route-timer" uri="timer://foo?period={{fetchTime}}"/>
-            <filter>
-       			<simple>${header.gameID} == null</simple>
-       			<log id="init-game-log" message="Starting new game"/>
-       			<toD uri="http4:{{backend.service}}/createGame"/>
-       			<unmarshal ref="transform-game"/>
-       			<setHeader headerName="gameID"><simple>${body.score.gameID}</simple></setHeader>
-       			<log message="New game started ${header.gameID}"/>
-       			<removeHeaders pattern="CamelHttp*"/>
-   			</filter>
+            <filter id="_filter1">
+                <simple>${exchangeProperty.CamelTimerCounter} == 1</simple>
+                <log id="init-game-log" message="Starting new game"/>
+                <toD id="_toD1" uri="http4:{{backend.service}}/createGame"/>
+                <unmarshal id="_unmarshal1" ref="transform-game"/>
+                <setHeader headerName="gameID" id="_setHeader1">
+                    <simple>${body.score.gameID}</simple>
+                </setHeader>
+                <log id="_log1" message="New game started ${header.gameID}"/>
+                <removeHeaders id="_removeHeaders1" pattern="CamelHttp*"/>
+            </filter>
             <log id="route-log" message="getRandomObject ${property.TIMER_COUNTER}"/>
-            <setBody><simple>${header.gameID}</simple></setBody>
-            <toD uri="http4:{{backend.service}}/getRandomObject"/>
-            <unmarshal ref="transform-platform-object"/>
-       		<setHeader headerName="objectType"><simple>${body.objectType}</simple></setHeader>
-       		<setHeader headerName="objectID"><simple>${body.objectID}</simple></setHeader>
-       		<setHeader headerName="objectName"><simple>${body.objectName}</simple></setHeader>
-       		<removeHeaders pattern="CamelHttp*"/>
-       		<log message="deleteObject ${body.objectName}"/>
-       		<setBody><simple>${header.gameID}</simple></setBody>
-       		<toD uri="http4:{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
-            <log message="done"/> 
+            <setBody id="_setBody1">
+                <simple>${header.gameID}</simple>
+            </setBody>
+            <toD id="_toD2" uri="http4:{{backend.service}}/getRandomObject"/>
+            <unmarshal id="_unmarshal2" ref="transform-platform-object"/>
+            <setHeader headerName="objectType" id="_setHeader2">
+                <simple>${body.objectType}</simple>
+            </setHeader>
+            <setHeader headerName="objectID" id="_setHeader3">
+                <simple>${body.objectID}</simple>
+            </setHeader>
+            <setHeader headerName="objectName" id="_setHeader4">
+                <simple>${body.objectName}</simple>
+            </setHeader>
+            <removeHeaders id="_removeHeaders2" pattern="CamelHttp*"/>
+            <log id="_log2" message="deleteObject ${body.objectName}"/>
+            <setBody id="_setBody2">
+                <simple>${header.gameID}</simple>
+            </setBody>
+            <toD id="_toD3" uri="http4:{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
+            <log id="_log3" message="done"/>
         </route>
     </camelContext>
 </beans>
