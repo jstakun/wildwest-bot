@@ -6,6 +6,10 @@ public class PlatformObject {
 	private String objectName;
 	private String objectType;
 	
+	public PlatformObject() {
+		
+	}
+	
 	public PlatformObject(String objectID, String objectName, String objectType) {
 		this.objectID = objectID;
 		this.objectName = objectName;
