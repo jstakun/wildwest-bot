@@ -15,6 +15,7 @@ public class PlatformObject {
 		this.objectName = objectName;
 		this.objectType = objectType;
 	}
+	
 	public String getObjectID() {
 		return objectID;
 	}
