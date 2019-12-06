@@ -27,7 +27,7 @@
        		<removeHeaders pattern="CamelHttp*"/>
        		<log message="deleteObject ${body.objectName}"/>
        		<setBody><simple>${header.gameID}</simple></setBody>
-       		<toD uri="http4:{{backend.service}}/ws/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
+       		<toD uri="http4:{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
             <log message="done"/> 
         </route>
     </camelContext>
