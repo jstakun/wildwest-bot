@@ -25,7 +25,7 @@
                 <log id="_log1" message="New game started ${header.gameID}"/>
                 <removeHeaders id="_removeHeaders1" pattern="CamelHttp*"/>
             </filter>
-            <log id="route-log" message="getRandomObject ${property.TIMER_COUNTER}"/>
+            <log id="route-log" message="getRandomObject ${exchangeProperty.CamelTimerCounter}"/>
             <setBody id="_setBody1">
                 <simple>${header.gameID}</simple>
             </setBody>
