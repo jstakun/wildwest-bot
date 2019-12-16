@@ -11,7 +11,7 @@
             <filter id="_filter1">
                 <simple>${exchangeProperty.CamelTimerCounter} == 1</simple>
                 <log id="init-game-log" message="Starting new game"/>
-                <toD id="_toD1" uri="http4:{{backend.service}}/createGame"/>
+                <toD id="_toD1" uri="netty-http:http://{{backend.service}}/createGame"/>
                 <unmarshal id="_unmarshal1" ref="transform-game"/>
                 <setHeader headerName="gameID" id="_setHeader1">
                     <simple>${body.score.gameID}</simple>
@@ -23,7 +23,7 @@
             <setBody id="_setBody1">
                 <simple>${header.gameID}</simple>
             </setBody>
-            <toD id="_toD2" uri="http4:{{backend.service}}/getRandomObject"/>
+            <toD id="_toD2" uri="netty-http:http://{{backend.service}}/getRandomObject"/>
             <unmarshal id="_unmarshal2" ref="transform-platform-object"/>
             <setHeader headerName="objectType" id="_setHeader2">
                 <simple>${body.objectType}</simple>
@@ -39,7 +39,7 @@
             <setBody id="_setBody2">
                 <simple>${header.gameID}</simple>
             </setBody>
-            <toD id="_toD3" uri="http4:{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
+            <toD id="_toD3" uri="netty-http:http://{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
             <log id="_log3" message="done"/>
         </route>
     </camelContext>
