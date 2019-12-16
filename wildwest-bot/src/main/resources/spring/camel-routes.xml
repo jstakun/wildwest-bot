@@ -1,0 +1,52 @@
+<routes>
+<route id="simple-route">
+            <from id="route-timer" uri="timer://foo?period={{fetchTime}}"/>
+            <filter id="_filter1">
+                <simple>${exchangeProperty.CamelTimerCounter} == 1</simple>
+                <log id="init-game-log" message="Starting new game"/>
+                <toD id="_toD1" uri="netty-http:http://{{backend.service}}/createGame"/>
+                <!--unmarshal id="_unmarshal1" ref="transform-game"/-->
+                <log message="Received ${body}"/>
+                <setHeader headerName="CamelJacksonUnmarshalType">
+                    <simple>com.openshift.wildwest.models.Game</simple>
+                </setHeader>
+                <unmarshal>
+                    <json library="Jackson" allowUnmarshallType="true"/> 
+                </unmarshal>
+                <log message="Transformed to ${body}"/>
+                <setHeader headerName="gameID" id="_setHeader1">
+                    <simple>${body.score.gameID}</simple>
+                </setHeader>
+                <log id="_log1" message="New game started ${header.gameID}"/>
+                <removeHeaders id="_removeHeaders1" pattern="CamelHttp*"/>
+            </filter>
+            <log id="route-log" message="getRandomObject ${property.TIMER_COUNTER}"/>
+            <setBody id="_setBody1">
+                <simple>${header.gameID}</simple>
+            </setBody>
+            <toD id="_toD2" uri="netty-http:http://{{backend.service}}/getRandomObject"/>
+            <!--unmarshal id="_unmarshal2" ref="transform-platform-object"/-->
+            <setHeader headerName="CamelJacksonUnmarshalType">
+                <simple>com.openshift.wildwest.models.PlatformObject</simple>
+            </setHeader>
+            <unmarshal>
+                <json library="Jackson" allowUnmarshallType="true"/> 
+            </unmarshal>    
+            <setHeader headerName="objectType" id="_setHeader2">
+                <simple>${body.objectType}</simple>
+            </setHeader>
+            <setHeader headerName="objectID" id="_setHeader3">
+                <simple>${body.objectID}</simple>
+            </setHeader>
+            <setHeader headerName="objectName" id="_setHeader4">
+                <simple>${body.objectName}</simple>
+            </setHeader>
+            <removeHeaders id="_removeHeaders2" pattern="CamelHttp*"/>
+            <log id="_log2" message="deleteObject ${body.objectName}"/>
+            <setBody id="_setBody2">
+                <simple>${header.gameID}</simple>
+            </setBody>
+            <toD id="_toD3" uri="netty-http:http://{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
+            <log id="_log3" message="done"/>
+        </route>
+</routes>
