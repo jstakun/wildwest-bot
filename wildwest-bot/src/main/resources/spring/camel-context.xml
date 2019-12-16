@@ -2,17 +2,25 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-        <dataFormats>
+        <!--dataFormats>
             <json id="transform-game" library="Jackson" unmarshalTypeName="com.openshift.wildwest.models.Game"/>
             <json id="transform-platform-object" library="Jackson" unmarshalTypeName="com.openshift.wildwest.models.PlatformObject"/>
-        </dataFormats>
+        </dataFormats-->
         <route id="simple-route">
             <from id="route-timer" uri="timer://foo?period={{fetchTime}}"/>
             <filter id="_filter1">
                 <simple>${exchangeProperty.CamelTimerCounter} == 1</simple>
                 <log id="init-game-log" message="Starting new game"/>
                 <toD id="_toD1" uri="netty-http:http://{{backend.service}}/createGame"/>
-                <unmarshal id="_unmarshal1" ref="transform-game"/>
+                <!--unmarshal id="_unmarshal1" ref="transform-game"/-->
+                <log message="Received ${body}"/>
+                <setHeader headerName="CamelJacksonUnmarshalType">
+                    <simple>com.openshift.wildwest.models.Game</simple>
+                </setHeader>
+                <unmarshal>
+                    <json library="Jackson" allowUnmarshallType="true"/> 
+                </unmarshal>
+                <log message="Transformed to ${body}"/>
                 <setHeader headerName="gameID" id="_setHeader1">
                     <simple>${body.score.gameID}</simple>
                 </setHeader>
@@ -24,7 +32,13 @@
                 <simple>${header.gameID}</simple>
             </setBody>
             <toD id="_toD2" uri="netty-http:http://{{backend.service}}/getRandomObject"/>
-            <unmarshal id="_unmarshal2" ref="transform-platform-object"/>
+            <!--unmarshal id="_unmarshal2" ref="transform-platform-object"/-->
+            <setHeader headerName="CamelJacksonUnmarshalType">
+                <simple>com.openshift.wildwest.models.PlatformObject</simple>
+            </setHeader>
+            <unmarshal>
+                <json library="Jackson" allowUnmarshallType="true"/> 
+            </unmarshal>    
             <setHeader headerName="objectType" id="_setHeader2">
                 <simple>${body.objectType}</simple>
             </setHeader>
