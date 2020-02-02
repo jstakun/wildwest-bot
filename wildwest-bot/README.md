@@ -47,3 +47,12 @@ Then create the quickstart template:
 
 Now when you use "Add to Project" button in the OpenShift console, you should see a template for this quickstart. 
 
+### Quarkus
+
+After you pull/fork:
+
+Delete org.mycompany.Application.java and pom.xml
+Rename quarkus-pom.xml to pom.xml
+Specify backend host:port in application.properties
+
+
