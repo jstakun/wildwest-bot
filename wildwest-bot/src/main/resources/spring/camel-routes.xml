@@ -20,12 +20,15 @@
             <setHeader id="_setHeader1" name="gameID">
                 <simple>${body.score.gameID}</simple>
             </setHeader>
+            <setProperty name="gameID">
+            	 <simple>${body.score.gameID}</simple>
+        	</setProperty>
             <log id="_log1" message="New game started ${header.gameID}"/>
             <removeHeaders id="_removeHeaders1" pattern="CamelHttp*"/>
         </filter>
         <log id="route-log" message="getRandomObject ${exchangeProperty.CamelTimerCounter}"/>
         <setBody id="_setBody1">
-            <simple>${header.gameID}</simple>
+            <simple>${exchangeProperty.gameID}</simple>
         </setBody>
         <to id="_toD2" uri="netty-http:http://{{backend.service}}/getRandomObject"/>
         <!--unmarshal id="_unmarshal2" ref="transform-platform-object"/-->
@@ -35,21 +38,16 @@
         <unmarshal id="_unmarshal2">
             <json allowUnmarshallType="true" library="Jackson"/>
         </unmarshal>
-        <setHeader id="_setHeader2" name="objectType">
-            <simple>${body.objectType}</simple>
-        </setHeader>
-        <setHeader id="_setHeader3" name="objectID">
-            <simple>${body.objectID}</simple>
-        </setHeader>
-        <setHeader id="_setHeader4" name="objectName">
-            <simple>${body.objectName}</simple>
-        </setHeader>
         <removeHeaders id="_removeHeaders2" pattern="CamelHttp*"/>
-        <log id="_log2" message="deleteObject ${body.objectName}"/>
+        <log id="_log2" message="deleteObject ${body.objectName} in game ${exchangeProperty.gameID}"/>
+        <setHeader name="CamelHttpQuery">
+            <simple>gameID=${exchangeProperty.gameID}&amp;objectType=${body.objectType}&amp;objectName=${body.objectName}&amp;objectID=${body.objectID}</simple>
+        </setHeader>
         <setBody id="_setBody2">
-            <simple>${header.gameID}</simple>
+            <simple>${exchangeProperty.gameID}</simple>
         </setBody>
-        <to id="_toD3" uri="netty-http:http://{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
+        <!--to uri="http://{{backend.service}}/deleteObject"/-->
+        <to id="_toD3" uri="netty-http:http://{{backend.service}}/deleteObject"/>
         <log id="_log3" message="done"/>
     </route>
     <route id="timer-watchdog-route">
