@@ -3,7 +3,7 @@
     xmlns="http://camel.apache.org/schema/spring"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="             http://camel.apache.org/schema/spring             http://camel.apache.org/schema/spring/camel-spring.xsd">
     <route id="simple-route">
-        <from id="route-timer" uri="timer://foo?period={{fetchTime}}"/>
+        <from id="route-timer" uri="timer://bot?period={{fetchTime}}"/>
         <filter id="_filter1">
             <simple>${exchangeProperty.CamelTimerCounter} == 1</simple>
             <log id="init-game-log" message="Starting new game"/>
@@ -51,5 +51,9 @@
         </setBody>
         <to id="_toD3" uri="netty-http:http://{{backend.service}}/deleteObject?gameID=${header.gameID}&amp;objectType=${header.objectType}&amp;objectName=${header.objectName}&amp;objectID=${header.objectID}"/>
         <log id="_log3" message="done"/>
+    </route>
+    <route id="timer-watchdog-route">
+        <from id="timer-watchdog" uri="timer://watchdog?period=10s"/>
+        <log id="_log41" message="this watchdog timer is fired every 10 second"/>
     </route>
 </routes>
