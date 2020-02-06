@@ -1,5 +1,8 @@
 package com.openshift.wildwest.models;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
 public class PlatformObject {
 
 	private String objectID;
