@@ -8,7 +8,6 @@
             <simple>${exchangeProperty.CamelTimerCounter} == 1</simple>
             <log id="init-game-log" message="Starting new game"/>
             <to id="_toD1" uri="netty-http:http://{{backend.service}}/createGame"/>
-            <!--unmarshal id="_unmarshal1" ref="transform-game"/-->
             <log id="_log4" message="Received ${body}"/>
             <setHeader id="_setHeader5" name="CamelJacksonUnmarshalType">
                 <simple>com.openshift.wildwest.models.Game</simple>
@@ -20,9 +19,9 @@
             <setHeader id="_setHeader1" name="gameID">
                 <simple>${body.score.gameID}</simple>
             </setHeader>
-            <setProperty name="gameID">
-            	 <simple>${body.score.gameID}</simple>
-        	</setProperty>
+            <setProperty id="_setProperty1" name="gameID">
+                <simple>${body.score.gameID}</simple>
+            </setProperty>
             <log id="_log1" message="New game started ${header.gameID}"/>
             <removeHeaders id="_removeHeaders1" pattern="CamelHttp*"/>
         </filter>
@@ -31,7 +30,6 @@
             <simple>${exchangeProperty.gameID}</simple>
         </setBody>
         <to id="_toD2" uri="netty-http:http://{{backend.service}}/getRandomObject"/>
-        <!--unmarshal id="_unmarshal2" ref="transform-platform-object"/-->
         <setHeader id="_setHeader6" name="CamelJacksonUnmarshalType">
             <simple>com.openshift.wildwest.models.PlatformObject</simple>
         </setHeader>
@@ -40,13 +38,12 @@
         </unmarshal>
         <removeHeaders id="_removeHeaders2" pattern="CamelHttp*"/>
         <log id="_log2" message="deleteObject ${body.objectName} in game ${exchangeProperty.gameID}"/>
-        <setHeader name="CamelHttpQuery">
+        <setHeader id="_setHeader2" name="CamelHttpQuery">
             <simple>gameID=${exchangeProperty.gameID}&amp;objectType=${body.objectType}&amp;objectName=${body.objectName}&amp;objectID=${body.objectID}</simple>
         </setHeader>
         <setBody id="_setBody2">
             <simple>${exchangeProperty.gameID}</simple>
         </setBody>
-        <!--to uri="http://{{backend.service}}/deleteObject"/-->
         <to id="_toD3" uri="netty-http:http://{{backend.service}}/deleteObject"/>
         <log id="_log3" message="done"/>
     </route>
