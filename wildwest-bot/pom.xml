@@ -9,7 +9,7 @@
   
      <properties>
         <quarkus.version>1.4.2.Final</quarkus.version>
-        <camel.quarkus.version>1.0.0-M3</camel.quarkus.version>
+        <camel.quarkus.version>1.0.0-M7</camel.quarkus.version>
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -18,17 +18,10 @@
    
     <dependencyManagement>
         <dependencies>
-            <!--dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency-->
             <dependency>
                 <groupId>org.apache.camel.quarkus</groupId>
         	    <artifactId>camel-quarkus-bom</artifactId>
-                <version>1.0.0-M7</version>
+                <version>${camel.quarkus.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
