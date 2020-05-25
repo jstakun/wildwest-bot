@@ -48,7 +48,7 @@
         <log id="_log3" message="done"/>
     </route>
     <route id="timer-watchdog-route">
-        <from id="timer-watchdog" uri="timer://watchdog?period=10s"/>
+        <from id="timer-watchdog" uri="timer://watchdog?period=10000"/>
         <log id="_log41" message="this watchdog timer is fired every 10 second"/>
     </route>
 </routes>
